@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:name="com.marioaliaga.tipcalc.TipCalcApp"
         android:theme="@style/AppTheme">
-        <activity android:name="com.marioaliaga.tipcalc.MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
