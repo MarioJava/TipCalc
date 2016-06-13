@@ -18,6 +18,9 @@ import com.marioaliaga.tipcalc.R;
 import com.marioaliaga.tipcalc.TipCalcApp;
 import com.marioaliaga.tipcalc.fragments.TipHistoryListFragment;
 import com.marioaliaga.tipcalc.fragments.TipHistoryFragmentsListener;
+import com.marioaliaga.tipcalc.models.TipRecord;
+
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,16 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.inputBill)
     EditText inputBill;
-    @Bind(R.id.btnSubmit)
-    Button btnSubmit;
     @Bind(R.id.inputPorcentage)
     EditText inputPorcentage;
-    @Bind(R.id.btnIncrease)
-    Button btnIncrease;
-    @Bind(R.id.btnDecrease)
-    Button btnDecrease;
-    @Bind(R.id.btnClear)
-    Button btnClear;
     @Bind(R.id.txtTip)
     TextView txtTip;
 
@@ -79,10 +74,15 @@ public class MainActivity extends AppCompatActivity {
         if (!strInputTotal.isEmpty()){
             double total = Double.parseDouble(strInputTotal);
             int tipPorcentage = getTipPorcentage();
-            double tip = total*(tipPorcentage/100d);
 
-            String strTip = String.format(getString(R.string.global_message_tip), tip);
-            fragmentsListener.action(strTip);
+            TipRecord tipRecord = new TipRecord();
+            tipRecord.setBill(total);
+            tipRecord.setTipPorcentage(tipPorcentage);
+            tipRecord.setTimestamp(new Date());
+
+            String strTip = String.format(getString(R.string.global_message_tip),
+                                          tipRecord.getTip());
+            fragmentsListener.addToList(tipRecord);
             txtTip.setVisibility(View.VISIBLE);
             txtTip.setText(strTip);
         }
@@ -109,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
     public void handleClickDecrease(){
         hideKeyBoard();
         handleTipChange(-TIP_STEP_CHANGE);
+    }
+
+    @OnClick(R.id.btnClear)
+    public void handleClickClear(){
+       fragmentsListener.clearList();
     }
 
     private void handleTipChange(int change) {
